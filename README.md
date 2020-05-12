@@ -2,6 +2,8 @@
 This app is an example chat application made to help you (and me) understand the various frameworks around it.
 This app is based off of the [smelte-template](https://github.com/SureDroid/smelte-template), which comes bundled with a lot of new and interesting frameworks, such as sapper, tailwind, scss, and more.
 
+Feel free to edit the code and test out different things.
+
 ### Running the project
 
 However you get the code, you can install dependencies and run the project in development mode with:
