@@ -8,7 +8,7 @@ const colors = {
   dark: "#212121",
 
   // These are material palette colors. You should keep only colors that you're using.
-  red: "#f44336",
+  // red: "#f44336",
   // pink: "#e91e63",
   // purple: "#9c27b0",
   // "deep-purple": "#673ab7",
@@ -22,7 +22,7 @@ const colors = {
   // lime: "#cddc39",
   // yellow: "#ffeb3b",
   // amber: "#ffc107",
-  // orange: "#ff9800",
+  orange: "#ff9800",
   // "deep-orange": "#ff5722",
   // brown: "#795548"
 };

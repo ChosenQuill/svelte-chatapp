@@ -10,7 +10,6 @@
   }
   
   main {
-    @apply bg-red-500;
     position: relative;
     max-width: 56em;
     background-color: white;
