@@ -25,43 +25,93 @@ server.listen(PORT, err => {
 		if (err) console.log('error', err);
 	});
 
-// Usercount is available if we want to implement showing how many users are online.
-let usercount = 0;
+let messages = [];
 
-// We populate the dataset with some default values to give the user an idea of what a conversation would look like. 
-let messages = [
-    {name:"MangoMan", message: `Hey man, what's up?`},
-    {name:"DCNewt", message: `I'm doin good, just checking out this app. Wbu?`},
-    {name:"MangoMan", message: `Doin the same, looks kinda neat.`},
-    {name:"DCNewt", message: `true`}
-];
+const users = new Map();
+
+function broadcast(message) {
+    let msgData = {
+        message,
+        type: 'broadcast'
+    }
+    messages.push(msgData);
+    io.sockets.emit('message', msgData);
+}
+
+function sendEvent(evtData) {
+    io.sockets.emit('event', evtData);
+}
+
+let numRgx = /-([1-9]+)$/
 
 io.on('connection', (socket)=>{
-    usercount++;
     socket.on('message', message => {
-        // In a real life scenario, you may want to do validation checks to make sure the data is valid, but for this demo app, it isn't needed.
-        messages.push(message);
-        socket.broadcast.emit("message", message);
+        if(typeof message !== 'string' || message.length > 250) { // Server side validation.
+            return;
+        }
+        let msg = {
+            message,
+            name: users.get(socket.id),
+        }
+        socket.broadcast.emit('message', msg);
+        msg.type = 'me';
+        socket.emit('message', msg);
     });
-    // Client wants the messages, so we send an event back with them.
-    socket.on("give-messages", () => {
-        socket.emit("recieve-messages", messages);
-    });
+    socket.on('typing', (isTyping) => {
+        sendEvent({
+            action: 'typing-' + isTyping,
+            data: users.get(socket.id),
+        })
+    })
     socket.on('disconnect', () => {
-        usercount--;
+        if(!users.has(socket.id)) {
+            return;
+        }
+        sendEvent({
+            action: "user-leave",
+            data: users.get(socket.id),
+        });
+        // Gets a random greeting, and inserts a name into it.
+        broadcast(goodbyes.getRandomMessage(users.get(socket.id)));
+        users.delete(socket.id);
     });
     // Normal connection events can't pass arguments, so we create our own event to pass our name argument and broadcast a welcome message with it.
     socket.on('user-join', name=> {
-        const msg = {
-            name: "Server",
-            // Gets a random greeting, and inserts a name into it.
-            message: greetings[Math.floor(Math.random() * greetings.length)].replace('$', name),
-            type: "server"
-        };
-        messages.push(msg);
-        io.sockets.emit('message', msg)
+        //Validatation for if the user actually joined for the first time.
+        if(users.has(socket.id) || name.length > 12) {
+            return;
+        }
+        let names = [...users.values()]; // Convert iterable usernames to array.
+        while(names.includes(name)) {
+            // Checks if the name has '-number' tag at the end, if so, change the number by +1, else give it a number tag.
+            let results = name.match(numRgx);
+            if(results) {
+                name = `${name.substr(0, results.index)}-${parseInt(results[1])+1}`;
+            } else {
+                name = name + '-1';
+            }
+        }
+        names.concat(name); // Add user's name to be displayed on userlist instead of reconverting from interator.
+        users.set(socket.id, name);
+
+        // Give existing data to the users on join.
+        socket.emit("welcome", {
+            messages, 
+            users: names,
+        });
+
+        sendEvent({
+            action: "user-join",
+            data: name
+        });
+
+        broadcast(greetings.getRandomMessage(name));
     })
 });
+
+Array.prototype.getRandomMessage = function(input) {
+    return this[Math.floor(Math.random() * this.length)].replace('$', input);
+}
 
 let greetings = [
     "Glad to meet you, $!",
@@ -69,4 +119,9 @@ let greetings = [
     "Checking out this chat, $?",
     "Wanted in on the fun, $?",
     "Everyone be nice to $.",
+], goodbyes = [
+    "Goodbye, $!",
+    "Fun talkin to ya, $.",
+    "See you later, $.",
+    "$ has left the party."
 ]
