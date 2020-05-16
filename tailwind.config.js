@@ -28,11 +28,12 @@ const colors = {
 };
 
 module.exports = {
-  colors
+  colors,
   // purge: [],
   // theme: {
   //   extend: {},
   // },
   // variants: {},
   // plugins: [],
+  purge: false
 }
