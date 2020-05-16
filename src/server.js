@@ -3,6 +3,8 @@ import express from 'express';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
 
+import "smelte/src/tailwind.css";
+
 const app = express();
 // We make our own http server here so we can use it with both express and socket.io instead of just express.
 const server = require('http').Server(app);
