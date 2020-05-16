@@ -6,7 +6,7 @@
     
     import UserDisplay from '../components/UserDisplay.svelte';
     
-    let input, messagebox, 
+    let input = "", messagebox = "", 
     loginerror, messageboxerror;
     // Call typing on input change if it has a vlue.
     $: input && typing();
@@ -21,6 +21,7 @@
     })
     
     function submit(){
+        input = input.trim();
         if(!input)
             return;
         if(input.length > 250) {
@@ -35,7 +36,11 @@
     }
 
     function submitName(name) {
-        if(name.length > 12) {
+        name = name.trim();
+        if(!name) {
+            loginerror = "Your name can't be empty."
+            return;
+        } else if(name.length > 12) {
             loginerror = "Your name can't be over 12 characters."
             return;
         } else if (loginerror) {
@@ -67,7 +72,7 @@
             </div>
             <Button add="h-12 mt-3 px-6">
                 Send
-            </Button>`
+            </Button>
         </form>
     {:else}
         <!-- Here we have our login box, which through the power of flex, is centered on the page. -->
@@ -85,5 +90,8 @@
         </div>
     {/if}
 </div>
+
+<!-- Ingore this div, its a fix for an issue with purgecss -->
+<div class="bg-primary-500 border-primary-500 hidden" />
 
 <UserDisplay />
