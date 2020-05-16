@@ -33,10 +33,6 @@ export default {
 				emitCss: true,
 				preprocess: [preprocess],
 			}),
-			smelte({
-				// purge: !dev,
-				tailwind,
-			}),
 			resolve({
 				browser: true,
 				dedupe: ['svelte']
@@ -80,7 +76,10 @@ export default {
 				dev,
 				preprocess: [preprocess],
 			}),
-			// !dev && smelte(),
+			smelte({
+				purge: !dev,
+                tailwind,
+			}),
 			resolve({
 				dedupe: ['svelte']
 			}),
