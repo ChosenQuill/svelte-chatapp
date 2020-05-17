@@ -1,3 +1,6 @@
+# NOTE
+While the base code is available on this reposititory, a more up to date version is available on our [custom git instance](https://labs.suredroid.com/chosen/svelte-chatapp). Feel free to browse with whatever suits you. 
+
 # Svelte Chatapp
 This app is an example chat application made to help you (and me) understand the various frameworks around it.
 This app is based off of the [smelte-template](https://github.com/SureDroid/smelte-template), which comes bundled with a lot of new and interesting frameworks, such as sapper, tailwind, scss, and more.
