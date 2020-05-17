@@ -57,7 +57,7 @@
         <!-- This div contains all the messages and allows for overflowing. -->
         <div class="flex flex-col overflow-y-auto" bind:this={messagebox}>
             {#each $messages as {name, message, type, timestamp}}
-                <div transition:fade="{{duration: 200}}" class="my-1 {type === "broadcast" ? "font-black" : "font-medium"}" >
+                <div in:fade="{{duration: 200}}" class="my-1 {type === "broadcast" ? "font-black" : "font-medium"}" >
                     {#if type != 'broadcast'}
                         <span class="font-bold {type === 'me' && 'text-orange-600'}"> {name}:</span> 
                     {/if}
@@ -84,7 +84,7 @@
                 <div class="mb-1">
                     Please login to continue.
                 </div>
-                <TextField label="Name" class="-mb-1" name="username" bind:error={loginerror} outlined/>
+                <TextField label="Name" name="username" bind:error={loginerror} outlined/>
                 <Button>Submit</Button>
             </form>
         </div>
@@ -92,6 +92,6 @@
 </div>
 
 <!-- Ingore this div, its a fix for an issue with purgecss -->
-<div class="bg-primary-500 border-primary-500 hidden" />
+<div class="bg-primary-500 border-primary-500 hidden" />   
 
 <UserDisplay />
