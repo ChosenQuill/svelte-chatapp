@@ -77,7 +77,7 @@ export default {
 				preprocess: [preprocess],
 			}),
 			smelte({
-				// purge: !dev,
+				purge: !dev,
                 tailwind,
 			}),
 			resolve({
