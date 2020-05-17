@@ -55,6 +55,7 @@ io.on('connection', (socket)=>{
             message,
             name: users.get(socket.id),
         }
+        messages.push(msg);
         socket.broadcast.emit('message', msg);
         msg.type = 'me';
         socket.emit('message', msg);
